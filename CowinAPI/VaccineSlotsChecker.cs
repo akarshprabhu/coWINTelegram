@@ -31,18 +31,18 @@ namespace CowinAPI
 
         private static async Task SendSlotsMsgForPincodeAsync(int age, string dateString, string pin, ILogger log)
         {
-            string url = $"https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode={pin}&date={dateString}";
+            string url = string.Format(GetEnvironmentVariable("cowinURL"), pin, dateString);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
-            string html = string.Empty;
+            string responseString = string.Empty;
             try
             {
                 using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 using (Stream stream = response.GetResponseStream())
                 using (StreamReader reader = new StreamReader(stream))
                 {
-                    html = await reader.ReadToEndAsync().ConfigureAwait(false);
+                    responseString = await reader.ReadToEndAsync().ConfigureAwait(false);
                 }
             }
             catch (Exception e)
@@ -51,7 +51,7 @@ namespace CowinAPI
                 return;
             }            
 
-            SessionsCalendarEntity sessionsEntity = JsonConvert.DeserializeObject<SessionsCalendarEntity>(html);
+            SessionsCalendarEntity sessionsEntity = JsonConvert.DeserializeObject<SessionsCalendarEntity>(responseString);
             var sessionList = sessionsEntity.centers;
             var sessions18 = sessionsEntity.centers.Where(x => x.sessions.Any(y => y.min_age_limit == age && y.available_capacity > 0)).ToList();
             
