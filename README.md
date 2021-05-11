@@ -10,7 +10,7 @@
 - Add bot to channel as Admin
 - Get chat id of the channel and apikey of the bot to use in this program
 
-## Required configuration values for this program
+## Required configurations
 ```
 {
   "IsEncrypted": false,
