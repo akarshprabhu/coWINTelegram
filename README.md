@@ -1,4 +1,9 @@
 # CoWIN Telegram Notifier
+## Why this?
+- Sends a telegram message instead of a mail or push notification on the phone. Can use telegram on phone as well as desktop. 
+- Commercially available notifiers run once an hour. You can make this run any number of times you need. 
+- What's more trustworthy than your own code and app? You know when it has a bug or is down. 
+
 ## Steps to setup Telegram 
 - Create a bot using botfather
 - Create a channel
