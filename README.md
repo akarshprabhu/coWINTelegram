@@ -1,5 +1,5 @@
 # CoWIN Telegram Notifier
-## Why this?
+## Why use this?
 - Sends a telegram message instead of a mail or push notification on the phone. Can use telegram on phone as well as desktop. 
 - Commercially available notifiers run once an hour. You can make this run any number of times you need. 
 - What's more trustworthy than your own code and app? You know when it has a bug or is down. 
@@ -24,6 +24,7 @@
     "pincodes": "<CSV pincodes>",
     "AzureWebJobsStorage": "",
     "age": "18",
+	"isDose1":  "<True/False>",
     "cowinURL": "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin?pincode={0}&date={1}"
   }
 }
