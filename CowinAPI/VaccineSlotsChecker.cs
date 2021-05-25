@@ -32,6 +32,7 @@ namespace CowinAPI
         private static async Task SendSlotsMsgForPincodeAsync(int age, string dateString, string pin, ILogger log)
         {
             string url = string.Format(GetEnvironmentVariable("cowinURL"), pin, dateString);
+            bool isDose1 = bool.Parse(GetEnvironmentVariable("isDose1"));
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
 
@@ -53,8 +54,7 @@ namespace CowinAPI
 
             SessionsCalendarEntity sessionsEntity = JsonConvert.DeserializeObject<SessionsCalendarEntity>(responseString);
             var sessionList = sessionsEntity.centers;
-            var sessions18 = sessionsEntity.centers.Where(x => x.sessions.Any(y => y.min_age_limit == age && y.available_capacity > 0)).ToList();
-            
+            var sessions18 = sessionsEntity.centers.Where(x => x.sessions.Any(y => y.min_age_limit == age && ((isDose1 && y.available_capacity_dose1 > 0) || (!isDose1 && y.available_capacity_dose2 > 0)))).ToList();
             if(sessions18.Count() > 0)
             {
                 TGSessionsCalendarEntity msgDTO = MapToTGEntity(sessions18);
