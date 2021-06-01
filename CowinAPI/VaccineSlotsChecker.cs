@@ -44,14 +44,11 @@ namespace CowinAPI
             string fileName = $"check";
             string localFilePath = Path.Combine(localPath, fileName);
 
-            // Write text to the file
-            await File.WriteAllTextAsync(localFilePath, DateTime.UtcNow.ToString());
-
             BlobContainerClient containerClient = await GetContainerClient().ConfigureAwait(false);
             Parallel.ForEach(containerClient.GetBlobs(), async x => await containerClient.GetBlobClient(x.Name).DeleteAsync(DeleteSnapshotsOption.IncludeSnapshots).ConfigureAwait(false));
             // Get a reference to a blob
             BlobClient blobClient = containerClient.GetBlobClient(fileName);
-            FileStream uploadFileStream = File.OpenRead(localFilePath);
+            FileStream uploadFileStream = File.Create(localFilePath);
             await blobClient.UploadAsync(uploadFileStream, true);
             uploadFileStream.Close();
             return uploadFileStream;
@@ -85,7 +82,11 @@ namespace CowinAPI
 
             // Create the container and return a container client object
             BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
-            await containerClient.CreateIfNotExistsAsync().ConfigureAwait(false);
+            if(!await containerClient.ExistsAsync().ConfigureAwait(false))
+            {
+                await containerClient.CreateAsync().ConfigureAwait(false);
+            }
+
             return containerClient;
         }
 
